@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MoneyFlow</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -26,8 +28,6 @@
   --muted2:       #9ca3af;
 }
 
-html, body { height: 100%; }
-
 body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
@@ -36,7 +36,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem 4rem;
+  padding: 1.25rem 0 4rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ── SHELL ── */
@@ -46,7 +47,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border2);
   border-radius: 20px;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 
@@ -72,7 +73,11 @@ body {
 
 /* ── VIEWS ── */
 .view { display: none; }
-.view.active { display: block; }
+.view.active { display: block; overflow: visible; }
+
+/* clip rounded corners on first/last children */
+.shell > *:first-child { border-radius: 20px 20px 0 0; overflow: hidden; }
+.shell > *:last-child  { border-radius: 0 0 20px 20px; overflow: hidden; }
 
 /* ── TOP NAV ── */
 .top-nav {
