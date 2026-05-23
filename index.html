@@ -32,23 +32,24 @@ body {
   font-family: 'DM Sans', sans-serif;
   background: var(--bg);
   color: var(--text);
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 1.25rem 0 4rem;
-  -webkit-overflow-scrolling: touch;
+  justify-content: center;
 }
 
 /* ── SHELL ── */
 .shell {
   width: 100%;
   max-width: 440px;
+  height: 100dvh;
   background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  overflow: visible;
-  position: relative;
+  border-left: 1px solid var(--border2);
+  border-right: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* ── LOADING SCREEN ── */
@@ -72,12 +73,16 @@ body {
 #errorMsg { display:none; color: var(--expense); font-size: 0.8rem; text-align: center; line-height: 1.6; }
 
 /* ── VIEWS ── */
-.view { display: none; }
-.view.active { display: block; overflow: visible; }
+.view { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+.view.active { display: flex; }
 
-/* clip rounded corners on first/last children */
-.shell > *:first-child { border-radius: 20px 20px 0 0; overflow: hidden; }
-.shell > *:last-child  { border-radius: 0 0 20px 20px; overflow: hidden; }
+/* scrollable content area inside each view */
+.scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
 
 /* ── TOP NAV ── */
 .top-nav {
@@ -378,18 +383,19 @@ body {
       </div>
     </div>
 
-    <div class="chart-section">
-      <div class="pie-wrap">
-        <canvas id="pieCanvas" width="160" height="160"
-          role="img" aria-label="Donut chart showing expense split by category">
-          Expense breakdown by category.
-        </canvas>
+    <div class="scroll-body">
+      <div class="chart-section">
+        <div class="pie-wrap">
+          <canvas id="pieCanvas" width="160" height="160"
+            role="img" aria-label="Donut chart showing expense split by category">
+            Expense breakdown by category.
+          </canvas>
+        </div>
+        <div class="legend" id="statsLegend"></div>
       </div>
-      <div class="legend" id="statsLegend"></div>
+      <div class="divider"></div>
+      <div class="cat-list" id="statsCatList"></div>
     </div>
-
-    <div class="divider"></div>
-    <div class="cat-list" id="statsCatList"></div>
   </div>
 
   <!-- INCOME DETAIL VIEW -->
@@ -404,18 +410,20 @@ body {
       <span class="month-label" id="incomeMonthLabel"></span>
       <button onclick="changeMonth(1)">›</button>
     </div>
-    <div class="income-summary">
-      <div>
-        <div class="income-total-label">Total this month</div>
-        <div class="income-total-val" id="incomeTotalVal">—</div>
+    <div class="scroll-body">
+      <div class="income-summary">
+        <div>
+          <div class="income-total-label">Total this month</div>
+          <div class="income-total-val" id="incomeTotalVal">—</div>
+        </div>
+        <div class="income-count-box">
+          <div class="income-count-num" id="incomeTxnCount">—</div>
+          <div class="income-count-label">entries</div>
+        </div>
       </div>
-      <div class="income-count-box">
-        <div class="income-count-num" id="incomeTxnCount">—</div>
-        <div class="income-count-label">entries</div>
-      </div>
+      <div class="divider"></div>
+      <div id="incomeLogsList"></div>
     </div>
-    <div class="divider"></div>
-    <div id="incomeLogsList"></div>
   </div>
 
   <!-- EXPENSE CATEGORY DETAIL VIEW -->
@@ -430,18 +438,20 @@ body {
       <span class="month-label" id="expCatMonthLabel"></span>
       <button onclick="changeMonth(1)">›</button>
     </div>
-    <div class="trend-wrap">
-      <canvas id="trendCanvas"
-        role="img" aria-label="Line chart showing monthly spend trend for this category">
-        Monthly spending trend.
-      </canvas>
+    <div class="scroll-body">
+      <div class="trend-wrap">
+        <canvas id="trendCanvas"
+          role="img" aria-label="Line chart showing monthly spend trend for this category">
+          Monthly spending trend.
+        </canvas>
+      </div>
+      <div class="divider"></div>
+      <div id="expCatTxnList"></div>
     </div>
-    <div class="divider"></div>
-    <div id="expCatTxnList"></div>
   </div>
 </div>
 
-<div class="footer-note">Live data · Google Sheets</div>
+
 
 <script>
 /* ─── CONFIG ─────────────────────────────────────────────── */
